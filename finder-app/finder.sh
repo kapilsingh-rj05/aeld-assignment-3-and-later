@@ -1,7 +1,7 @@
 #!/bin/sh
 
-make clean
-make
+# make clean
+# make
 
 verify_dir="$1"
 searchstr="$2"
