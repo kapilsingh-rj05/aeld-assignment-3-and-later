@@ -1,20 +1,22 @@
 #!/bin/sh
-if [ $# -lt 2 ]; then
-    echo "Error: Parameters not specified. Usage: $0 <filesdir> <searchstr>"
-    exit 1
-fi
 
-filesdir="$1"
+make clean
+make
+
+verify_dir="$1"
 searchstr="$2"
 
-if [ ! -d "$filesdir" ]; then
-    echo "Error: '$filesdir' does not represent a directory on the filesystem."
+if [ -z "$verify_dir" ] || [ -z "$searchstr" ]; then
+    echo "Error: Parameters missing. Usage: $0 <directory> <search-string>"
     exit 1
 fi
 
-X=$(find "$filesdir" -type f | wc -l)
+if [ ! -d "$verify_dir" ]; then
+    echo "Error: Directory $verify_dir does not exist."
+    exit 1
+fi
 
-Y=$(grep -rn "$searchstr" "$filesdir" 2>/dev/null | wc -l)
+num_files=$(find "$verify_dir" -type f | wc -l)
+num_matching_lines=$(grep -r "$searchstr" "$verify_dir" | wc -l)
 
-echo "The number of files are $X and the number of matching lines are $Y"
-exit 0
+echo "The number of files are $num_files and the number of matching lines are $num_matching_lines"
